@@ -29,42 +29,6 @@ export const Content = styled.div`
       margin-bottom: 24px;
     }
 
-    input {
-      padding: 16px;
-      width: 100%;
-
-      & + input {
-        margin-top: 8px;
-      }
-
-      background: #232129;
-      border-radius: 10px;
-      border: 2px solid #232129;
-      color: #f4ede8;
-
-      &::placeholder {
-        color: #666360;
-      }
-    }
-
-    button {
-      margin-top: 16px;
-      height: 56px;
-      padding: 0 16px;
-      width: 100%;
-
-      background: #ff9000;
-      border-radius: 10px;
-      border: 0;
-      color: #312e38;
-      font-weight: 500;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background: ${shade(0.2, '#ff9000')};
-      }
-    }
-
     a {
       margin-top: 24px;
 
