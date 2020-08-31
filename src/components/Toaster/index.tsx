@@ -1,50 +1,37 @@
 import React from 'react';
 import { FiAlertCircle, FiXCircle } from 'react-icons/fi';
 
+import { Toast as ToastInterface, useToaster } from '../../hooks/toaster';
+
 import { Container, Toast } from './styles';
 
-const Toaster: React.FC = () => {
+interface ToasterProps {
+  toasts: ToastInterface[];
+}
+
+const Toaster: React.FC<ToasterProps> = ({ toasts }) => {
+  const { eatToast } = useToaster();
+
   return (
     <Container>
-      <Toast hasDescription>
-        <FiAlertCircle />
+      {toasts.map(toast => (
+        <Toast
+          key={toast.id}
+          type={toast.type}
+          hasDescription={!!toast.description}
+        >
+          <FiAlertCircle size={20} />
 
-        <div>
-          <strong>Aconteceu um erro</strong>
+          <div>
+            <strong>{toast.title}</strong>
+            {toast.description && <p>{toast.description}</p>}
+          </div>
 
-          <p>Nao foi possivel fazer login na applicacao</p>
-        </div>
-
-        <button type="button">
-          <FiXCircle size={18} />
-        </button>
-      </Toast>
-
-      <Toast type="success" hasDescription={false}>
-        <FiAlertCircle />
-
-        <div>
-          <strong>Aconteceu um erro</strong>
-        </div>
-
-        <button type="button">
-          <FiXCircle size={18} />
-        </button>
-      </Toast>
-
-      <Toast type="error" hasDescription>
-        <FiAlertCircle />
-
-        <div>
-          <strong>Aconteceu um erro</strong>
-
-          <p>Nao foi possivel fazer login na applicacao</p>
-        </div>
-
-        <button type="button">
-          <FiXCircle size={18} />
-        </button>
-      </Toast>
+          <button type="button" onClick={() => eatToast(toast.id)}>
+            <FiXCircle size={18} />
+          </button>
+        </Toast>
+      ))}
     </Container>
   );
 };

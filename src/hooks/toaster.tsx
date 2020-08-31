@@ -1,10 +1,18 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
+import { uuid } from 'uuidv4';
 
 import Toaster from '../components/Toaster';
 
+export interface Toast {
+  id: string;
+  type?: 'success' | 'error' | 'info';
+  title: string;
+  description?: string;
+}
+
 interface ToasterContextData {
-  popToast(): void;
-  eatToast(): void;
+  popToast(message: Omit<Toast, 'id'>): void;
+  eatToast(id: string): void;
 }
 
 const ToasterContext = createContext<ToasterContextData>(
@@ -12,19 +20,28 @@ const ToasterContext = createContext<ToasterContextData>(
 );
 
 export const ToasterProvider: React.FC = ({ children }) => {
-  const popToast = useCallback(() => {
-    console.log('Hot Hot');
-  }, []);
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const eatToast = useCallback(() => {
-    console.log('Yum Yum');
+  const popToast = useCallback(
+    ({ type, title, description }: Omit<Toast, 'id'>) => {
+      const id = uuid();
+
+      const toast = { id, type, title, description };
+
+      setToasts(oldToasts => [...oldToasts, toast]);
+    },
+    [],
+  );
+
+  const eatToast = useCallback((id: string) => {
+    setToasts(oldToasts => oldToasts.filter(toast => toast.id !== id));
   }, []);
 
   return (
     <ToasterContext.Provider value={{ popToast, eatToast }}>
       {children}
 
-      <Toaster />
+      <Toaster toasts={toasts} />
     </ToasterContext.Provider>
   );
 };

@@ -42,6 +42,11 @@ const SignIn: React.FC = () => {
 
         const { email, password } = data;
         await signIn({ email, password });
+
+        popToast({
+          type: 'success',
+          title: 'Sucesso!',
+        });
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const unformErrors = parseValidationErrors(error);
@@ -49,7 +54,12 @@ const SignIn: React.FC = () => {
           formRef.current?.setErrors(unformErrors);
         }
 
-        popToast();
+        popToast({
+          type: 'error',
+          title: 'Falha na autenticacao',
+          description:
+            'Ocorreu um erro no seu login, verifique suas credencias.',
+        });
       }
     },
     [signIn, popToast],
