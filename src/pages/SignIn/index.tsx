@@ -6,7 +6,8 @@ import * as Yup from 'yup';
 
 import parseValidationErrors from '../../utils/parseValidationErrors';
 
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/auth';
+import { useToaster } from '../../hooks/toaster';
 
 import logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
@@ -23,6 +24,7 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
+  const { popToast } = useToaster();
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -39,7 +41,7 @@ const SignIn: React.FC = () => {
         await schema.validate(data, { abortEarly: false });
 
         const { email, password } = data;
-        signIn({ email, password });
+        await signIn({ email, password });
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const unformErrors = parseValidationErrors(error);
@@ -47,10 +49,10 @@ const SignIn: React.FC = () => {
           formRef.current?.setErrors(unformErrors);
         }
 
-        // Add Toasts
+        popToast();
       }
     },
-    [signIn],
+    [signIn, popToast],
   );
 
   return (
